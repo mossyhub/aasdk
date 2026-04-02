@@ -22,6 +22,8 @@
 #include <aap_protobuf/service/navigationstatus/message/NavigationNextTurnDistanceEvent.pb.h>
 #include <aap_protobuf/service/navigationstatus/message/NavigationNextTurnEvent.pb.h>
 #include <aap_protobuf/service/navigationstatus/message/NavigationStatus.pb.h>
+#include <aap_protobuf/service/navigationstatus/message/NavigationState.pb.h>
+#include <aap_protobuf/service/navigationstatus/message/NavigationCurrentPosition.pb.h>
 #include "aasdk/Error/Error.hpp"
 
 namespace aasdk::channel::navigationstatus {
@@ -44,6 +46,18 @@ namespace aasdk::channel::navigationstatus {
 
     virtual void
     onDistanceEvent(const aap_protobuf::service::navigationstatus::message::NavigationNextTurnDistanceEvent &distanceEvent) = 0;
+
+    virtual void
+    onNavigationState(const aap_protobuf::service::navigationstatus::message::NavigationState &navState) {
+        // Default no-op — override if consuming the newer NavigationState API (msg 32774)
+        (void)navState;
+    }
+
+    virtual void
+    onCurrentPosition(const aap_protobuf::service::navigationstatus::message::NavigationCurrentPosition &position) {
+        // Default no-op — override if consuming current position (msg 32775)
+        (void)position;
+    }
   };
 
 }

@@ -20,6 +20,7 @@
 
 
 #include <aap_protobuf/service/control/message/ChannelOpenRequest.pb.h>
+#include <aap_protobuf/service/phonestatus/message/PhoneStatus.pb.h>
 #include "aasdk/Error/Error.hpp"
 
 namespace aasdk::channel::phonestatus {
@@ -34,6 +35,8 @@ namespace aasdk::channel::phonestatus {
     virtual ~IPhoneStatusServiceEventHandler() = default;
 
     virtual void onChannelOpenRequest(const aap_protobuf::service::control::message::ChannelOpenRequest &request) = 0;
+
+    virtual void onPhoneStatusUpdate(const aap_protobuf::service::phonestatus::message::PhoneStatus &status) = 0;
 
     virtual void onChannelError(const error::Error &e) = 0;
   };

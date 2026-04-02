@@ -251,8 +251,8 @@ file(GLOB_RECURSE tests_include_files ${include_ut_directory}/*.hpp)
 
 list(REMOVE_ITEM source_files ${tests_source_files})
 
-if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")  # macOS
-    message(NOTICE "Configuring STATIC Library for MacOS")
+if(CMAKE_SYSTEM_NAME STREQUAL "Darwin" OR BUILD_AASDK_STATIC)  # macOS or explicit static request
+    message(NOTICE "Configuring STATIC Library")
     add_library(aasdk STATIC
             ${source_files}
             ${include_files})

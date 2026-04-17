@@ -22,6 +22,7 @@ import "aap_protobuf/service/sensorsource/message/GyroscopeData.proto";
 import "aap_protobuf/service/sensorsource/message/TirePressureData.proto";
 import "aap_protobuf/service/sensorsource/message/TollCardData.proto";
 import "aap_protobuf/service/sensorsource/message/GpsSatellite.proto";
+import "aap_protobuf/service/sensorsource/message/VehicleEnergyModel.proto";
 
 
 package aap_protobuf.service.sensorsource.message;
@@ -49,4 +50,14 @@ message SensorBatch {
     repeated GyroscopeData gyroscope_data = 20;
     repeated GpsSatelliteData gps_satellite_data = 21;
     repeated TollCardData toll_card_data = 22;
+    // Fields 23-26: undocumented sensor types discovered via AA APK decompilation
+    // Field 23 uses VehicleEnergyModel — an opaque pass-through message on the phone.
+    // The phone AA app serializes it back to bytes for GMS/Maps.
+    repeated VehicleEnergyModel vehicle_energy_model_data = 23;
+    // Field 24: Trailer data (placeholder — not implemented)
+    // repeated TrailerData trailer_data = 24;
+    // Field 25: Raw vehicle energy model bytes wrapper
+    repeated RawVehicleEnergyModel raw_vehicle_energy_model = 25;
+    // Field 26: Raw EV trip settings bytes wrapper
+    repeated RawEvTripSettings raw_ev_trip_settings = 26;
 }

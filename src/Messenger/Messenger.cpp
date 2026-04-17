@@ -118,7 +118,19 @@ namespace aasdk::messenger {
   }
 
   void Messenger::doSend() {
+    if (channelSendPromiseQueue_.empty()) return;
+
     auto queueElementIter = channelSendPromiseQueue_.begin();
+
+    // Guard: if the message was already consumed (shouldn't happen, but prevents crash)
+    if (!queueElementIter->first) {
+      channelSendPromiseQueue_.erase(queueElementIter);
+      if (!channelSendPromiseQueue_.empty()) {
+        this->doSend();
+      }
+      return;
+    }
+
     auto outStreamPromise = SendPromise::defer(sendStrand_);
     outStreamPromise->then(std::bind(&Messenger::outStreamMessageHandler, this->shared_from_this(), queueElementIter),
                            std::bind(&Messenger::rejectSendPromiseQueue, this->shared_from_this(),

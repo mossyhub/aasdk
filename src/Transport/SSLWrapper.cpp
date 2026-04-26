@@ -70,8 +70,11 @@ namespace aasdk {
     }
 
     SSLWrapper::~SSLWrapper() {
+// OpenSSL 3.x removed most cleanup functions — they're no-ops or gone.
+// Only call them on OpenSSL 1.x.
+#if OPENSSL_VERSION_NUMBER < 0x30000000L
 #ifdef FIPS_mode_set
-      FIPS_mode_set(0); // FIPS_mode_set removed in later versions of OpenSSL.
+      FIPS_mode_set(0);
 #endif
 #ifdef HAVE_ENGINE_H
       ENGINE_cleanup();
@@ -83,6 +86,7 @@ namespace aasdk {
       ERR_remove_state(0);
 #endif
       ERR_free_strings();
+#endif // OPENSSL_VERSION_NUMBER < 0x30000000L
     }
 
     X509 *SSLWrapper::readCertificate(const std::string &certificate) {

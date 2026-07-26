@@ -157,7 +157,16 @@ namespace aasdk {
       void ControlServiceChannel::sendPingResponse(const aap_protobuf::service::control::message::PingResponse &request,
                                                    SendPromise::Pointer promise) {
         AASDK_LOG_CHANNEL_CONTROL(debug, "sendPingResponse()");
-        auto message(std::make_shared<messenger::Message>(channelId_, messenger::EncryptionType::PLAIN,
+        // Ping traffic only ever flows AFTER AuthComplete, i.e. after the peer has
+        // switched the control channel to encrypted. Sending it PLAIN makes Android
+        // Auto's framer reject the frame outright:
+        //     iyl: Unencrypted frame not allowed  (at iyr.write)
+        //     Framing Error encountered. -> ReaderThread: closing the connection
+        // gearhead's rule (17.3 smali iyr:1408) is: if the connection requires
+        // encryption AND the SSL cryptor exists, ANY frame without the encrypted bit
+        // is a hard framing error — ping is not special-cased. Every other post-auth
+        // message on this channel is already ENCRYPTED; these two were the outliers.
+        auto message(std::make_shared<messenger::Message>(channelId_, messenger::EncryptionType::ENCRYPTED,
                                                           messenger::MessageType::SPECIFIC));
         message->insertPayload(
             messenger::MessageId(aap_protobuf::service::control::message::ControlMessageType::MESSAGE_PING_RESPONSE).getData());
@@ -169,7 +178,11 @@ namespace aasdk {
       void ControlServiceChannel::sendPingRequest(const aap_protobuf::service::control::message::PingRequest &request,
                                                   SendPromise::Pointer promise) {
         AASDK_LOG_CHANNEL_CONTROL(debug, "sendPingRequest()");
-        auto message(std::make_shared<messenger::Message>(channelId_, messenger::EncryptionType::PLAIN,
+        // See sendPingResponse() above — must be ENCRYPTED. This is the frame that
+        // actually broke projection: JniSession::startAllHandlers() calls sendPing()
+        // immediately after "All 9 handlers started", making it the first post-auth
+        // frame the head unit emits, and gearhead killed the connection ~3ms later.
+        auto message(std::make_shared<messenger::Message>(channelId_, messenger::EncryptionType::ENCRYPTED,
                                                           messenger::MessageType::SPECIFIC));
         message->insertPayload(
             messenger::MessageId(aap_protobuf::service::control::message::ControlMessageType::MESSAGE_PING_REQUEST).getData());

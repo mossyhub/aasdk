@@ -25,6 +25,7 @@
 #include <aap_protobuf/service/navigationstatus/message/NavigationState.pb.h>
 #include <aap_protobuf/service/navigationstatus/message/NavigationCurrentPosition.pb.h>
 #include "aasdk/Error/Error.hpp"
+#include "aasdk/Common/Data.hpp"
 
 namespace aasdk::channel::navigationstatus {
 
@@ -57,6 +58,11 @@ namespace aasdk::channel::navigationstatus {
     onCurrentPosition(const aap_protobuf::service::navigationstatus::message::NavigationCurrentPosition &position) {
         // Default no-op — override if consuming current position (msg 32775)
         (void)position;
+    }
+
+    virtual void onVehicleEnergyForecast(const common::DataConstBuffer &buffer) {
+        // Default no-op — raw GAL/PDK 5.1+ forecast wrapper (msg 32776).
+        (void)buffer;
     }
   };
 

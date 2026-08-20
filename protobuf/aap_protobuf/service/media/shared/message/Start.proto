@@ -5,4 +5,9 @@ package aap_protobuf.service.media.shared.message;
 message Start {
     required int32 session_id = 1;
     required uint32 configuration_index = 2;
+    // GAL/PDK 5.0+ audio start and 6.0+ video start extensions.
+    optional int32 session_type = 3;
+    // Raw AVChannelMediaConfig envelope. Semantics are still reverse-engineered;
+    // retain and report it without imposing a stale schema.
+    optional bytes media_config = 4;
 }

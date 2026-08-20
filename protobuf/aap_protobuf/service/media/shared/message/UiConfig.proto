@@ -10,4 +10,7 @@ message UiConfig {
   optional Insets content_insets = 2;
   optional Insets stable_content_insets = 3;
   optional UiTheme ui_theme = 4;
+  // GAL/PDK 4.3+ CarDisplayUiFeatures values: clock=1, battery=2,
+  // phone signal=3, native affordance=4, cluster turn card=5.
+  repeated int32 hidden_ui_elements = 5;
 }

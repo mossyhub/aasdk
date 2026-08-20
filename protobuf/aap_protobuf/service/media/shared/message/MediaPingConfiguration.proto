@@ -1,0 +1,10 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// Wire shape reconstructed from Android Auto; semantics remain unresolved.
+syntax = "proto2";
+
+package aap_protobuf.service.media.shared.message;
+
+message MediaPingConfiguration {
+  optional int64 ping_interval_ns = 1;
+  optional int32 ping_timeout_ms = 2;
+}

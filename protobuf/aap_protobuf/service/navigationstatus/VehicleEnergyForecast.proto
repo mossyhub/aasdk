@@ -1,0 +1,47 @@
+// Android Auto Protocol Buffer Definitions
+// Source lineage: https://github.com/mrmees/open-android-auto
+// SPDX-License-Identifier: GPL-3.0-or-later
+syntax = "proto2";
+
+package aap_protobuf.service.navigationstatus;
+
+message VehicleEnergyForecastMessage {
+  optional bytes vehicle_energy_forecast = 1;
+}
+
+message VehicleEnergyForecast {
+  optional EnergyAtDistance energy_at_next_stop = 1;
+  optional EnergyAtDistance distance_to_empty = 2;
+  optional ForecastQuality forecast_quality = 3;
+  optional EnergyChargingStationDetails next_charging_stop = 4;
+  repeated StopDetails stop_details = 5;
+  repeated DataAuthorization data_authorizations = 6;
+}
+
+message EnergyAtDistance {
+  optional int32 distance_meters = 1;
+  optional int32 arrival_battery_energy_wh = 2;
+  reserved 3;
+  optional int32 time_to_arrival_seconds = 4;
+}
+
+message EnergyChargingStationDetails {
+  optional int32 min_departure_energy_wh = 1;
+  optional int32 max_rated_power_watts = 2;
+  optional int32 estimated_charging_time_seconds = 3;
+}
+
+message StopDetails {
+  optional EnergyAtDistance expected_arrival_energy = 1;
+  optional EnergyChargingStationDetails charging_info = 2;
+}
+
+message DataAuthorization {
+  optional string id = 1;
+}
+
+enum ForecastQuality {
+  FORECAST_QUALITY_UNKNOWN = 0;
+  FORECAST_QUALITY_LOW = 1;
+  FORECAST_QUALITY_HIGH = 2;
+}

@@ -70,6 +70,17 @@ namespace aasdk::channel::control {
 
     virtual void onChannelError(const error::Error &e) = 0;
 
+    // Appended compatibility callbacks preserve the legacy callback vtable.
+    virtual void onVersionResponse(uint16_t majorCode, uint16_t minorCode,
+                                   aap_protobuf::shared::MessageStatus status,
+                                   const common::DataConstBuffer &trailingBytes) {
+      (void)trailingBytes;
+      onVersionResponse(majorCode, minorCode, status);
+    }
+    virtual void onVersionResponseMalformed(size_t) {
+      onChannelError(error::Error(error::ErrorCode::PARSE_PAYLOAD));
+    }
+
 
   };
 }

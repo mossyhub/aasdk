@@ -52,6 +52,8 @@ namespace aasdk::channel::mediasink::audio {
 
     virtual void onMediaIndication(const common::DataConstBuffer &buffer) = 0;
 
+    virtual void onMediaOptions(const common::DataConstBuffer &buffer) { (void)buffer; }
+
     virtual void onChannelError(const error::Error &e) = 0;
 
   };

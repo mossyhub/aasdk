@@ -1,0 +1,23 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// Typed payload carried by modern Start.media_config. Semantics remain unresolved.
+syntax = "proto2";
+
+import "aap_protobuf/service/media/shared/message/MediaPingConfiguration.proto";
+
+package aap_protobuf.service.media.shared.message;
+
+message MediaConfig {
+  optional MediaPingConfiguration timing_1 = 1;
+  optional bool feature_flag_1 = 2;
+  optional MediaPingConfiguration timing_2 = 3;
+  optional MediaPingConfiguration timing_3 = 4;
+  optional MediaPingConfiguration timing_4 = 5;
+  optional MediaPingConfiguration timing_5 = 6;
+  optional uint32 config_value = 7;
+  optional MediaPingConfiguration timing_6 = 8;
+  optional bool feature_flag_2 = 9;
+  optional MediaPingConfiguration timing_7 = 10;
+  optional bool feature_flag_3 = 11;
+  optional MediaPingConfiguration timing_8 = 12;
+  optional MediaPingConfiguration timing_9 = 13;
+}

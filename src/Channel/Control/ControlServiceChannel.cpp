@@ -21,6 +21,7 @@
 #include <aasdk/IO/PromiseLink.hpp>
 #include <aasdk/Channel/Control/ControlServiceChannel.hpp>
 #include <aasdk/Channel/Control/IControlServiceChannelEventHandler.hpp>
+#include <aasdk/Channel/Control/VersionResponseParser.hpp>
 #include <aasdk/Common/Log.hpp>
 #include <aasdk/Common/ModernLogger.hpp>
 
@@ -28,6 +29,7 @@
 namespace aasdk {
   namespace channel {
     namespace control {
+
 
       ControlServiceChannel::ControlServiceChannel(boost::asio::io_service::strand &strand,
                                                    messenger::IMessenger::Pointer messenger)
@@ -256,15 +258,21 @@ namespace aasdk {
                                                         IControlServiceChannelEventHandler::Pointer eventHandler) {
         AASDK_LOG_CHANNEL_CONTROL(debug, "handleVersionResponse()");
 
-        //const size_t elements = payload.size / sizeof(uint16_t);
-        const uint16_t *versionResponse = reinterpret_cast<const uint16_t *>(payload.cdata);
+        ParsedVersionResponse parsed;
+        if (!parseVersionResponse(payload.cdata, payload.size, parsed)) {
+          AASDK_LOG(error) << "[ControlServiceChannel] Version response too short: " << payload.size;
+          eventHandler->onVersionResponseMalformed(payload.size);
+          return;
+        }
 
-        aap_protobuf::shared::MessageStatus status = static_cast<aap_protobuf::shared::MessageStatus>(boost::endian::big_to_native(
-            versionResponse[2]));
-        AASDK_LOG(info) << "[ControlServiceChannel] Handling Version - Major: " << versionResponse[0] << " Minor: "
-                        << versionResponse[1] << "Status: " << status;
+        const auto status = static_cast<aap_protobuf::shared::MessageStatus>(parsed.status);
+        const common::DataConstBuffer trailingBytes(parsed.trailingData, parsed.trailingSize);
 
-        eventHandler->onVersionResponse(versionResponse[0], versionResponse[1], status);
+        AASDK_LOG(info) << "[ControlServiceChannel] Handling Version - Major: " << parsed.major
+                        << " Minor: " << parsed.minor << " Status: " << parsed.status
+                        << " Trailing bytes: " << trailingBytes.size;
+
+        eventHandler->onVersionResponse(parsed.major, parsed.minor, status, trailingBytes);
       }
 
       void ControlServiceChannel::handleServiceDiscoveryRequest(const common::DataConstBuffer &payload,

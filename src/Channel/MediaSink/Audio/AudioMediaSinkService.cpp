@@ -115,6 +115,10 @@ namespace aasdk::channel::mediasink::audio {
       case aap_protobuf::service::media::sink::MediaMessageId::MEDIA_MESSAGE_DATA:
         this->handleMediaWithTimestampIndication(payload, std::move(eventHandler));
         break;
+      case aap_protobuf::service::media::sink::MediaMessageId::MEDIA_MESSAGE_MEDIA_OPTIONS:
+        eventHandler->onMediaOptions(payload);
+        this->receive(std::move(eventHandler));
+        break;
       default:
         AASDK_LOG(error) << "[AudioMediaSinkService] Message Id not Handled: " << messageId.getId();
         this->receive(std::move(eventHandler));

@@ -1,0 +1,23 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// Phone-to-HU message 0x8014. Tags and wire types are known; semantics are not.
+syntax = "proto2";
+
+import "aap_protobuf/service/media/shared/message/MediaPingConfiguration.proto";
+
+package aap_protobuf.service.media.shared.message;
+
+message MediaOptions {
+  optional MediaPingConfiguration ping_configuration_1 = 1;
+  optional bool bool_value_2 = 2;
+  optional MediaPingConfiguration ping_configuration_3 = 3;
+  optional MediaPingConfiguration ping_configuration_4 = 4;
+  optional MediaPingConfiguration ping_configuration_5 = 5;
+  optional MediaPingConfiguration ping_configuration_6 = 6;
+  optional uint32 uint32_value_7 = 7;
+  optional MediaPingConfiguration ping_configuration_8 = 8;
+  optional bool bool_value_9 = 9;
+  optional MediaPingConfiguration ping_configuration_10 = 10;
+  optional bool bool_value_11 = 11;
+  optional MediaPingConfiguration ping_configuration_12 = 12;
+  optional MediaPingConfiguration ping_configuration_13 = 13;
+}

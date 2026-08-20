@@ -52,6 +52,8 @@ namespace aasdk::channel::mediasink::video {
 
     virtual void onMediaIndication(const common::DataConstBuffer &buffer) = 0;
 
+    virtual void onMediaOptions(const common::DataConstBuffer &buffer) { (void)buffer; }
+
     virtual void onVideoFocusRequest(
         const aap_protobuf::service::media::video::message::VideoFocusRequestNotification &request) = 0;
 
